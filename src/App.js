@@ -1,9 +1,9 @@
-import InvoiceRow from "./components/invoice-row/invoice-row.component";
+import Invoice from './components/invoice/invoice.component';
 
 function App() {
   return (
     <div>
-      <InvoiceRow />      
+      <Invoice />
     </div>
   );
 }

@@ -1,34 +1,15 @@
-import { useState } from 'react';
-// import { DatePicker, TimePicker } from 'antd';
 import './invoice-row.styles.scss';
 
-const InvoiceRow = () => {
-  const [dateAndTimes, setDateAndTimes] = useState({
-    startDate: '',
-    endDate: '',
-    startTime: '',
-    endTime: ''
-  });
 
-  const onChange = (event) => {
-    const { name, value } = event.target;
-    setDateAndTimes({
-      ...dateAndTimes,
-      [name]: value
-    })
-  }
-
-
-  const { startDate, endDate, startTime, endTime } = dateAndTimes;
+const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange }) => {
   return (
     <div className="invoice-row">
       {/* Start Date */}
       <time>
         <input
-          id="start"
           type="date"
           name="startDate"
-          onChange={onChange}
+          onChange={onInvoiceChange}
           value={startDate}
         />
       </time>
@@ -38,8 +19,7 @@ const InvoiceRow = () => {
         <input
           type="time"
           name="startTime"
-          required
-          onChange={onChange}
+          onChange={onInvoiceChange}
           value={startTime}
         />
       </time>
@@ -47,11 +27,10 @@ const InvoiceRow = () => {
       {/* Finish Date */}
       <time>
         <input
-          id="start"
           type="date"
           name="endDate"
           min={startDate}
-          onChange={onChange}
+          onChange={onInvoiceChange}
           value={endDate}
         />
       </time>
@@ -62,8 +41,7 @@ const InvoiceRow = () => {
           type="time"
           name="endTime"
           min={startTime}
-          required
-          onChange={onChange}
+          onChange={onInvoiceChange}
           value={endTime}
         />
       </time>
@@ -78,9 +56,9 @@ const InvoiceRow = () => {
         <textarea name="" id="" cols="30" rows="2"></textarea>
       </div>
 
+      {/* Actions */}
       <div>
-        {/* Actions */}
-        <button>x</button>
+        <button>Delete</button>
       </div>
     </div>
   )
