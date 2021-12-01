@@ -1,11 +1,44 @@
 import './invoice-row.styles.scss';
 
 
-const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange }) => {
+const InvoiceRow = ({
+  startDate,
+  endDate,
+  startTime,
+  endTime,
+  onInvoiceChange,
+  memo,
+  onDelete
+}) => {
+  const totalTimePassed = () => {
+    let hours = 0;
+    const startHrs = Number(startTime.slice(0, 2));
+    const startMin = Number(startTime.slice(-2));
+    const endHrs = Number(endTime.slice(0, 2));
+    const endMin = Number(endTime.slice(-2));
+
+    if (startDate === endDate) {
+      const diffHrs = endHrs - startHrs;
+      hours = diffHrs
+    }
+    else if (endDate > startDate) {
+      const dayMultiplier = Number(endDate.slice(-2)) - Number(startDate.slice(-2));
+      const diffDayOne = (24 * dayMultiplier) - startHrs;
+      const diffDayTwo = (24 * dayMultiplier) + endHrs;
+      const sumOfTwoDays = diffDayOne + diffDayTwo;
+      hours = sumOfTwoDays - (24 * dayMultiplier);
+    }
+    const diffMin = endMin > startMin
+      ? endMin - startMin
+      : startMin - endMin;
+
+    return `${hours}.${diffMin < 10 ? 0 : ''}${diffMin}`;
+  }
+
   return (
     <div className="invoice-row">
       {/* Start Date */}
-      <time>
+      <time className="start-date">
         <input
           type="date"
           name="startDate"
@@ -15,7 +48,7 @@ const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange })
       </time>
 
       {/* Start Time */}
-      <time>
+      <time className="start-time">
         <input
           type="time"
           name="startTime"
@@ -25,7 +58,7 @@ const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange })
       </time>
 
       {/* Finish Date */}
-      <time>
+      <time className="end-date">
         <input
           type="date"
           name="endDate"
@@ -36,7 +69,7 @@ const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange })
       </time>
 
       {/* Finish Time */}
-      <time>
+      <time className="end-time">
         <input
           type="time"
           name="endTime"
@@ -46,19 +79,25 @@ const InvoiceRow = ({ startDate, endDate, startTime, endTime, onInvoiceChange })
         />
       </time>
 
-      {/* Total */}
+      {/* Total Hours */}
       <div>
-        0
+        {totalTimePassed()}
       </div>
 
       {/* Memo */}
-      <div>
-        <textarea name="" id="" cols="30" rows="2"></textarea>
+      <div className="memo">
+        <textarea
+          name="memo"
+          cols="30"
+          rows="2"
+          onChange={onInvoiceChange}
+          value={memo}
+        ></textarea>
       </div>
 
       {/* Actions */}
-      <div>
-        <button>Delete</button>
+      <div className="actions">
+        <button onClick={onDelete}>Delete</button>
       </div>
     </div>
   )

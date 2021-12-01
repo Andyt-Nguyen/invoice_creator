@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import InvoiceHeader from '../invoice-header/invoice-header.component';
 import InvoiceRow from '../invoice-row/invoice-row.component';
 import './invoice.styles.scss';
 
@@ -7,18 +6,21 @@ const Invoice = () => {
   const [invoices, setInvoices] = useState([
     {
       id: 1,
+      memo: "Hello world",
       startDate: '2021-12-02',
       endDate: '2021-12-02',
       startTime: '19:43',
       endTime: '20:04'
     }, {
       id: 2,
+      memo: "Test world",
       startDate: '2021-12-02',
       endDate: '2021-12-02',
       startTime: '05:43',
       endTime: '09:04'
     }, {
       id: 3,
+      memo: "Tester worlds",
       startDate: '2021-12-02',
       endDate: '2021-12-02',
       startTime: '15:43',
@@ -37,6 +39,11 @@ const Invoice = () => {
     };
     setInvoices([...invoices, newInvoice]);
   };
+
+  const removeInvoiceRow = (invoiceId) => {
+    const removedInvoiceRow = invoices.filter(({ id }) => id !== invoiceId)
+    setInvoices(removedInvoiceRow);
+  }
 
   const onInvoiceChange = (evt, id) => {
     const { name, value } = evt.target;
@@ -66,6 +73,7 @@ const Invoice = () => {
         invoices.map(invoice => (
           <InvoiceRow
             key={invoice.id}
+            onDelete={() => removeInvoiceRow(invoice.id)}
             onInvoiceChange={evt => onInvoiceChange(evt, invoice.id)}
             {...invoice}
           />
