@@ -11,11 +11,8 @@ const Invoice = () => {
   const { invoices, createInvoice, totalHours } = useContext(InvoiceContext);
 
   const renderDownloadBtn = ({ loading, error }) => {
-    if (loading) {
-      return <p>Loading...</p>
-    } else if (error) {
-      return <p>Unable to download invoice</p>
-    }
+    if (loading) return <p>Loading...</p>
+    else if (error) return <p>Unable to download invoice</p>
     return <button className="success-btn">Download</button>
   }
 

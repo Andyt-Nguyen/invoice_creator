@@ -12,11 +12,13 @@ const InvoiceRow = ({
   memo,
 }) => {
   const { onInvoiceChange, removeInvoice } = useContext(InvoiceContext);
+
   const totalHours = totalHoursPassed(startTime, endTime, startDate, endDate);
   const onInputChange = (evt) => {
     const { name, value } = evt.target;
     onInvoiceChange({ [name]: value }, id);
-  }
+  };
+
   return (
     <div className="invoice-row">
       {/* Start Date */}
@@ -79,7 +81,11 @@ const InvoiceRow = ({
 
       {/* Actions */}
       <div className="actions">
-        <button className="delete-btn" onClick={() => removeInvoice(id)}>Delete</button>
+        <button
+          className="danger-btn"
+          onClick={() => removeInvoice(id)}>
+          Delete
+        </button>
       </div>
     </div>
   )

@@ -19,6 +19,10 @@ export const totalHoursPassed = (startTime, endTime, startDate, endDate) => {
   const diffMin = endMin > startMin
     ? endMin - startMin
     : startMin - endMin;
+  
+  if(hours < 0) {
+    return 0;
+  }
 
   return `${hours}.${diffMin < 10 ? 0 : ''}${diffMin}`;
 };
