@@ -12,8 +12,8 @@ const InvoiceRow = ({
   memo,
 }) => {
   const { onInvoiceChange, removeInvoice } = useContext(InvoiceContext);
-
   const totalHours = totalHoursPassed(startTime, endTime, startDate, endDate);
+
   const onInputChange = (evt) => {
     const { name, value } = evt.target;
     onInvoiceChange({ [name]: value }, id);
