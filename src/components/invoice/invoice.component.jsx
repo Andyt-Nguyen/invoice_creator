@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import InvoiceRow from '../invoice-row/invoice-row.component';
+import InvoiceRow from 'components/invoice-row/invoice-row.component';
+import { totalHoursPassed } from 'utils/helper';
 import './invoice.styles.scss';
 
 const Invoice = () => {
@@ -55,17 +56,26 @@ const Invoice = () => {
     setInvoices(editedInvoice);
   };
 
+  const totalHours = () => {
+    return invoices.reduce((acummulator, invoice) => {
+      const { startTime, endTime, startDate, endDate } = invoice;
+      return (
+        acummulator + Number(totalHoursPassed(startTime, endTime, startDate, endDate))
+      )
+    }, 0).toFixed(2);
+  }
+
   return (
     <div className="invoice">
-      <div>
-        <button onClick={addInvoiceRow}>add invoice</button>
+      <div className="add-btn-container">
+        <button onClick={addInvoiceRow}>Add Invoice</button>
       </div>
       <header>
         <p>Start Date</p>
         <p>Start Time</p>
         <p>Finish Date</p>
         <p>Finish Time</p>
-        <p>Total</p>
+        <p>Total(Hrs)</p>
         <p>Memo</p>
         <p>Actions</p>
       </header>
@@ -79,6 +89,9 @@ const Invoice = () => {
           />
         ))
       }
+
+
+      <h2>Total Hours: {totalHours()}</h2>
     </div>
   )
 }

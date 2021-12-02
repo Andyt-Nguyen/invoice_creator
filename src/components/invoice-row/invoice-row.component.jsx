@@ -1,3 +1,4 @@
+import { totalHoursPassed } from 'utils/helper';
 import './invoice-row.styles.scss';
 
 
@@ -10,31 +11,7 @@ const InvoiceRow = ({
   memo,
   onDelete
 }) => {
-  const totalTimePassed = () => {
-    let hours = 0;
-    const startHrs = Number(startTime.slice(0, 2));
-    const startMin = Number(startTime.slice(-2));
-    const endHrs = Number(endTime.slice(0, 2));
-    const endMin = Number(endTime.slice(-2));
-
-    if (startDate === endDate) {
-      const diffHrs = endHrs - startHrs;
-      hours = diffHrs
-    }
-    else if (endDate > startDate) {
-      const dayMultiplier = Number(endDate.slice(-2)) - Number(startDate.slice(-2));
-      const diffDayOne = (24 * dayMultiplier) - startHrs;
-      const diffDayTwo = (24 * dayMultiplier) + endHrs;
-      const sumOfTwoDays = diffDayOne + diffDayTwo;
-      hours = sumOfTwoDays - (24 * dayMultiplier);
-    }
-    const diffMin = endMin > startMin
-      ? endMin - startMin
-      : startMin - endMin;
-
-    return `${hours}.${diffMin < 10 ? 0 : ''}${diffMin}`;
-  }
-
+  const totalHours = totalHoursPassed(startTime, endTime, startDate, endDate);
   return (
     <div className="invoice-row">
       {/* Start Date */}
@@ -81,7 +58,7 @@ const InvoiceRow = ({
 
       {/* Total Hours */}
       <div>
-        {totalTimePassed()}
+        {totalHours}
       </div>
 
       {/* Memo */}
@@ -89,15 +66,16 @@ const InvoiceRow = ({
         <textarea
           name="memo"
           cols="30"
-          rows="2"
+          rows="3"
           onChange={onInvoiceChange}
           value={memo}
+          re
         ></textarea>
       </div>
 
       {/* Actions */}
       <div className="actions">
-        <button onClick={onDelete}>Delete</button>
+        <button className="delete-btn" onClick={onDelete}>Delete</button>
       </div>
     </div>
   )

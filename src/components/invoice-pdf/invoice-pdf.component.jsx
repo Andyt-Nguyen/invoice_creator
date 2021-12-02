@@ -1,26 +1,10 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View } from '@react-pdf/renderer';
+import { totalHoursPassed } from 'utils/helper';
 
-// Create styles
-const styles = StyleSheet.create({
-  page: {
-    padding: '50px'
-  },
-  section: {
-    margin: '0 10px',
-    padding: 10,
-    flexDirection: 'row',
-    borderBottom: '1px solid black'
-  },
+import styles from './invoice-pdf.styles';
 
-  textStyle: {
-    fontSize: '10px',
-    width: '100px',
-  }
-});
-
-// Create Document Component
 const InvoicePdf = () => {
-  const hello = [
+  const invoices = [
     {
       id: 1,
       memo: "Hello world",
@@ -43,12 +27,22 @@ const InvoicePdf = () => {
       startTime: '15:43',
       endTime: '16:00'
     }
-  ]
+  ];
+
+  const totalHours = () => {
+    return invoices.reduce((acummulator, invoice) => {
+      const { startTime, endTime, startDate, endDate } = invoice;
+      return (
+        acummulator + Number(totalHoursPassed(startTime, endTime, startDate, endDate))
+      )
+    }, 0).toFixed(2);
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View>
-          <Text style={{ fontSize: 40, marginBottom: 20 }}>Invoice</Text>
+          <Text style={styles.title}>Invoice</Text>
         </View>
         <View style={styles.section}>
           <Text style={styles.textStyle}>Start Date</Text>
@@ -58,29 +52,25 @@ const InvoicePdf = () => {
           <Text style={styles.textStyle}>Total</Text>
           <Text style={styles.textStyle}>Memo</Text>
         </View>
-        <View style={{ flexDirection: 'row', margin: '0 10px', padding: '10px', borderBottom: '1px solid black' }}>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>19:43</Text>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>09:04</Text>
-          <Text style={styles.textStyle}>12.4</Text>
-          <Text style={styles.textStyle}>Hello world</Text>
-        </View>
-        <View style={{ flexDirection: 'row', margin: '0 10px', padding: '10px', borderBottom: '1px solid black' }}>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>19:43</Text>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>09:04</Text>
-          <Text style={styles.textStyle}>12.4</Text>
-          <Text style={styles.textStyle}>Hello world</Text>
-        </View>
-        <View style={{ flexDirection: 'row', margin: '0 10px', padding: '10px', borderBottom: '1px solid black' }}>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>19:43</Text>
-          <Text style={styles.textStyle}>2021-12-02</Text>
-          <Text style={styles.textStyle}>09:04</Text>
-          <Text style={styles.textStyle}>12.4</Text>
-          <Text style={styles.textStyle}>Hello world</Text>
+        {
+          invoices.map(({ id, memo, startDate, endDate, startTime, endTime }) => (
+            <View key={id} style={styles.section}>
+              <Text style={styles.textStyle}>{startDate}</Text>
+              <Text style={styles.textStyle}>{startTime}</Text>
+              <Text style={styles.textStyle}>{endDate}</Text>
+              <Text style={styles.textStyle}>{endTime}</Text>
+              <Text style={styles.textStyle}>
+                {totalHoursPassed(startTime, endTime, startDate, endDate)}
+              </Text>
+              <Text style={styles.textStyle}>{memo}</Text>
+            </View>
+          ))
+        }
+
+        <View>
+          <Text style={{ textAlign: 'right', marginRight: 20, marginTop: 20 }}>
+            Total Hours: {totalHours()}
+          </Text>
         </View>
       </Page>
     </Document>
