@@ -22,16 +22,12 @@
     margin-right: 20px;
   }
 
-  .add-btn-container {
+  .btn-container {
     display: flex;
     justify-content: flex-end;
 
-    button {
-      border: none;
-      border-radius: 5px;
-      padding: 10px;
-      color: white;
-      background: dodgerblue;
+    button:nth-child(1) {
+      margin-right: 10px;
     }
   }
 }

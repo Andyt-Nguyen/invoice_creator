@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.primary-btn {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  background: dodgerblue;
+}
+
+.danger-btn {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  background: red;
+}
+
+.success-btn {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  background: limegreen;
+}

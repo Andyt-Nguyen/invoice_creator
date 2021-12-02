@@ -1,75 +1,38 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+import { InvoiceContext } from 'providers/invoice/invoice.provider';
+
+import { PDFDownloadLink } from '@react-pdf/renderer'
 import InvoiceRow from 'components/invoice-row/invoice-row.component';
-import { totalHoursPassed } from 'utils/helper';
+import InvoicePdf from 'components/invoice-pdf/invoice-pdf.component';
+
 import './invoice.styles.scss';
 
 const Invoice = () => {
-  const [invoices, setInvoices] = useState([
-    {
-      id: 1,
-      memo: "Hello world",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '19:43',
-      endTime: '20:04'
-    }, {
-      id: 2,
-      memo: "Test world",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '05:43',
-      endTime: '09:04'
-    }, {
-      id: 3,
-      memo: "Tester worlds",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '15:43',
-      endTime: '16:00'
+  const { invoices, createInvoice, totalHours } = useContext(InvoiceContext);
+
+  const renderDownloadBtn = ({ loading, error }) => {
+    if (loading) {
+      return <p>Loading...</p>
+    } else if (error) {
+      return <p>Unable to download invoice</p>
     }
-  ]);
-
-  const addInvoiceRow = () => {
-    const newId = Number((Math.random() * 1000) + 4).toFixed(0);
-    const newInvoice = {
-      id: newId,
-      startDate: '',
-      endDate: '',
-      startTime: '',
-      endTime: ''
-    };
-    setInvoices([...invoices, newInvoice]);
-  };
-
-  const removeInvoiceRow = (invoiceId) => {
-    const removedInvoiceRow = invoices.filter(({ id }) => id !== invoiceId)
-    setInvoices(removedInvoiceRow);
-  }
-
-  const onInvoiceChange = (evt, id) => {
-    const { name, value } = evt.target;
-    const editedInvoice = invoices.map(invoice => (
-      invoice.id === id
-        ? { ...invoice, [name]: value }
-        : invoice
-    ));
-    setInvoices(editedInvoice);
-  };
-
-  const totalHours = () => {
-    return invoices.reduce((acummulator, invoice) => {
-      const { startTime, endTime, startDate, endDate } = invoice;
-      return (
-        acummulator + Number(totalHoursPassed(startTime, endTime, startDate, endDate))
-      )
-    }, 0).toFixed(2);
+    return <button className="success-btn">Download</button>
   }
 
   return (
     <div className="invoice">
-      <div className="add-btn-container">
-        <button onClick={addInvoiceRow}>Add Invoice</button>
-      </div>
+      <aside className="btn-container">
+        <button className="primary-btn" onClick={createInvoice}>
+          Add Invoice
+        </button>
+        <PDFDownloadLink
+          filename="invoice.pdf"
+          document={<InvoicePdf invoices={invoices} totalHours={totalHours} />}
+        >
+          {renderDownloadBtn}
+        </PDFDownloadLink>
+      </aside>
+
       <header>
         <p>Start Date</p>
         <p>Start Time</p>
@@ -79,19 +42,10 @@ const Invoice = () => {
         <p>Memo</p>
         <p>Actions</p>
       </header>
-      {
-        invoices.map(invoice => (
-          <InvoiceRow
-            key={invoice.id}
-            onDelete={() => removeInvoiceRow(invoice.id)}
-            onInvoiceChange={evt => onInvoiceChange(evt, invoice.id)}
-            {...invoice}
-          />
-        ))
-      }
 
+      {invoices.map(invoice => <InvoiceRow key={invoice.id} {...invoice} />)}
 
-      <h2>Total Hours: {totalHours()}</h2>
+      <h2>Total Hours: {totalHours}</h2>
     </div>
   )
 }

@@ -1,17 +1,22 @@
+import { useContext } from 'react';
+import { InvoiceContext } from 'providers/invoice/invoice.provider';
 import { totalHoursPassed } from 'utils/helper';
 import './invoice-row.styles.scss';
 
-
 const InvoiceRow = ({
+  id,
   startDate,
   endDate,
   startTime,
   endTime,
-  onInvoiceChange,
   memo,
-  onDelete
 }) => {
+  const { onInvoiceChange, removeInvoice } = useContext(InvoiceContext);
   const totalHours = totalHoursPassed(startTime, endTime, startDate, endDate);
+  const onInputChange = (evt) => {
+    const { name, value } = evt.target;
+    onInvoiceChange({ [name]: value }, id);
+  }
   return (
     <div className="invoice-row">
       {/* Start Date */}
@@ -19,7 +24,7 @@ const InvoiceRow = ({
         <input
           type="date"
           name="startDate"
-          onChange={onInvoiceChange}
+          onChange={onInputChange}
           value={startDate}
         />
       </time>
@@ -29,7 +34,7 @@ const InvoiceRow = ({
         <input
           type="time"
           name="startTime"
-          onChange={onInvoiceChange}
+          onChange={onInputChange}
           value={startTime}
         />
       </time>
@@ -40,7 +45,7 @@ const InvoiceRow = ({
           type="date"
           name="endDate"
           min={startDate}
-          onChange={onInvoiceChange}
+          onChange={onInputChange}
           value={endDate}
         />
       </time>
@@ -51,7 +56,7 @@ const InvoiceRow = ({
           type="time"
           name="endTime"
           min={startTime}
-          onChange={onInvoiceChange}
+          onChange={onInputChange}
           value={endTime}
         />
       </time>
@@ -67,15 +72,14 @@ const InvoiceRow = ({
           name="memo"
           cols="30"
           rows="3"
-          onChange={onInvoiceChange}
+          onChange={onInputChange}
           value={memo}
-          re
         ></textarea>
       </div>
 
       {/* Actions */}
       <div className="actions">
-        <button className="delete-btn" onClick={onDelete}>Delete</button>
+        <button className="delete-btn" onClick={() => removeInvoice(id)}>Delete</button>
       </div>
     </div>
   )

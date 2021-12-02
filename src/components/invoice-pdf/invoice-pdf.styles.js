@@ -1,6 +1,5 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
-// Create styles
 const styles = StyleSheet.create({
   page: {
     padding: 50

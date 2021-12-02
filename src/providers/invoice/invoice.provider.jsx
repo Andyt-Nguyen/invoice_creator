@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-
+import invoiceData from './invoice.data.json'
 import {
   createNewInvoice,
   deleteInvoice,
@@ -16,10 +16,10 @@ export const InvoiceContext = createContext({
 });
 
 const InvoiceProvider = ({ children }) => {
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState(invoiceData.invoices);
   const [totalHours, setTotalHours] = useState(0);
-  const createInvoice = () => setInvoices(createNewInvoice());
-  const removeInvoice = (id) => setInvoices(deleteInvoice(id));
+  const createInvoice = () => setInvoices(createNewInvoice(invoices));
+  const removeInvoice = (id) => setInvoices(deleteInvoice(invoices, id));
   const onInvoiceChange = (obj, id) => setInvoices(handleInvoiceChange(invoices, obj, id));
 
   useEffect(() => {
@@ -28,13 +28,13 @@ const InvoiceProvider = ({ children }) => {
 
   return (
     <InvoiceContext.Provider
-      value={
+      value={{
         invoices,
         totalHours,
         createInvoice,
         removeInvoice,
         onInvoiceChange
-      }
+      }}
     >
       {children}
     </InvoiceContext.Provider>

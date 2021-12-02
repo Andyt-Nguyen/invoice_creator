@@ -1,43 +1,10 @@
 import { Document, Page, Text, View } from '@react-pdf/renderer';
+
 import { totalHoursPassed } from 'utils/helper';
 
 import styles from './invoice-pdf.styles';
 
-const InvoicePdf = () => {
-  const invoices = [
-    {
-      id: 1,
-      memo: "Hello world",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '19:43',
-      endTime: '20:04'
-    }, {
-      id: 2,
-      memo: "Test world",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '05:43',
-      endTime: '09:04'
-    }, {
-      id: 3,
-      memo: "Tester worlds",
-      startDate: '2021-12-02',
-      endDate: '2021-12-02',
-      startTime: '15:43',
-      endTime: '16:00'
-    }
-  ];
-
-  const totalHours = () => {
-    return invoices.reduce((acummulator, invoice) => {
-      const { startTime, endTime, startDate, endDate } = invoice;
-      return (
-        acummulator + Number(totalHoursPassed(startTime, endTime, startDate, endDate))
-      )
-    }, 0).toFixed(2);
-  };
-
+const InvoicePdf = ({ invoices, totalHours }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -69,7 +36,7 @@ const InvoicePdf = () => {
 
         <View>
           <Text style={{ textAlign: 'right', marginRight: 20, marginTop: 20 }}>
-            Total Hours: {totalHours()}
+            Total Hours: {totalHours}
           </Text>
         </View>
       </Page>
